@@ -1,0 +1,60 @@
+﻿@page "/EmployeeDetails/{Id}"
+@using EmployeeManagement.Data
+@inject EmployeeService employeeService
+@inject IJSRuntime JSRuntime
+@inject NavigationManager NavigationManager
+
+<h2>View Employee Details</h2>
+<div class="container" id="EmployeeDetails"> <!-- Add id attribute here -->
+    <div class="card mb-3 employee-details">
+        <div class="card-body">
+            <h5 class="card-title">Employee Details</h5>
+            <table class="table table-sm">
+                <tbody>
+                <tr>
+                    <th scope="row">Employee ID:</th>
+                    <td><i class="fas fa-id-card"></i> @obj.Id</td>
+                </tr>
+                <tr>
+                    <th scope="row">Name:</th>
+                    <td>@obj.FullName</td>
+                </tr>
+                <tr>
+                    <th scope="row">Designation:</th>
+                    <td>@obj.Designation</td>
+                </tr>
+                <tr>
+                    <th scope="row">City:</th>
+                    <td>@obj.City</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-end">
+        <button type="button" class="btn btn-danger me-2" @onclick="Print">Print</button>
+        <button type="button" class="btn btn-primary" @onclick="Cancel">Cancel</button>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+    Employee obj = new Employee();
+
+    protected override async Task OnInitializedAsync()
+    {
+        obj = await Task.Run(() => employeeService.GetEmployeeById(Convert.ToInt32(Id)));
+    }
+
+    protected async Task Print()
+    {
+        await JSRuntime.InvokeVoidAsync("printJS", "EmployeeDetails", "html");
+    }
+
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("EmployeeList");
+    }
+}

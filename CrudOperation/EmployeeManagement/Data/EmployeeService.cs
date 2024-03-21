@@ -1,5 +1,6 @@
 ﻿using EmployeeManagement.Context;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace EmployeeManagement.Data
 {
@@ -23,6 +24,43 @@ namespace EmployeeManagement.Data
             var employeeList = _applicationDbContext.Employees.ToListAsync();
             return await employeeList;
         }
+       
+
+
+        
+        public async Task<List<Employee>> GetPagedEmployees(string searchEmail = "", int? pageSize = null, int? pageNo = null)
+        {
+            IQueryable<Employee> query = _applicationDbContext.Employees.OrderBy(x => x.Id);
+
+            if (!string.IsNullOrEmpty(searchEmail))
+            {
+                query = query.Where(q => q.EmailAddress.ToLower().Contains(searchEmail.ToLower()));
+            }
+
+            if (pageNo.HasValue && pageSize.HasValue && pageNo.Value >= 0 && pageSize.Value > 0)
+            {
+                pageNo = pageNo.Value > 1 ? pageNo.Value - 1 : 0;
+
+                query = query.Skip(pageNo.Value * pageSize.Value).Take(pageSize.Value);
+            }
+
+            return await query.ToListAsync();
+        }
+
+        // Get Total Employees Count
+        public async Task<int> GetTotalEmployeesCount(string searchEmail)
+        {
+            IQueryable<Employee> query = _applicationDbContext.Employees;
+
+            if (!string.IsNullOrEmpty(searchEmail))
+            {
+                query = query.Where(e => e.EmailAddress.Contains(searchEmail));
+            }
+
+            return await query.CountAsync();
+        }
+     
+
         //Insert Employee
         public async Task<bool> AddNewEmployee(Employee employee)
         {

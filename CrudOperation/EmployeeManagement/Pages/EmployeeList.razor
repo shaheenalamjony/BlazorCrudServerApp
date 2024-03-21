@@ -2,73 +2,182 @@
 @using EmployeeManagement.Data
 @inject EmployeeService employeeService
 
-<h3>EmployeeList</h3>
+<style>
+    .inline-link {
+        display: inline-block;
+        margin-right: 10px; /* Adjust this value to add spacing between the links */
+    }
 
-<NavLink class="nav-link" href="AddEmployee">
-    <span class="oi oi-plus" aria-hidden="true">Add New Employee</span>
-</NavLink>
+    .vertical-align-center {
+        display: flex;
+        align-items: center;
+    }
+</style>
+<h1>Employee List</h1>
 
-<h1>Employees List</h1>
+<div class="row" style="padding: 10px;">
+    <div class="col-md-4">
+        <input type="text" @bind="@searchId" class="form-control" placeholder="Search by Employee ID" />
+    </div>
+    <div class="col-md-4">
+        <input type="text" @bind="@searchEmail" class="form-control" placeholder="Search by Email Address" />
+    </div>
+    <div class="col-md-4">
+        <button @onclick="ToggleAdvancedSearch" class="btn btn-primary btn-small">
+            <i class="@(toggleAdvSearch ? "fa fa-minus" : "fa fa-plus")"></i> Advanced Search
+        </button>
+    </div>
+    @if (toggleAdvSearch)
+    {
+        <div class="col-md-12 table-form">
+            <table class="form" width="100%" border="0">
+                <tbody>
+                
 
-@if (EmpObj is null)
+                <tr>
+                    <td class="">Designation</td>
+                    <td class="" style="padding-right:50px;">
+                        <input type="text" @bind="Designation" class="form-control" placeholder="Search By Designation" maxlength="150" required />
+                    </td>
+                    <td class="">Department</td>
+                    <td class="" style="padding-right:50px;">
+                        <input type="text" @bind="Department" class="form-control" placeholder="Search By Department" maxlength="150" required />
+                    </td>
+                </tr>
+                <tr><td></td></tr>
+                <tr>
+                    <td class="">Phone Number</td>
+                    <td class="" style="padding-right:50px;">
+                        <input type="text" @bind="PhoneNumber" class="form-control" placeholder="Search By Phone Number" maxlength="150" required />
+                    </td>
+                    <td class="">Address</td>
+                    <td class="" style="padding-right:50px;">
+                        <input type="text" @bind="Address" class="form-control" placeholder="Search By Address" maxlength="150" required />
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    }
+
+    <div class="col-md-12 text-center" style="margin-top: 10px;">
+        <button @onclick="LoadEmployees" class="btn btn-md btn-primary">
+            <span class="oi oi-magnifying-glass"></span> Search
+        </button>
+    </div>
+</div>
+
+
+
+@if (employees == null)
 {
-    <p><em>Loading.................</em></p>
+    <p>Loading...</p>
+}
+else if (employees.Any())
+{
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Employee ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var employee in employees)
+            {
+                <tr>
+                    <td>@employee.Id</td>
+                    <td>@employee.FirstName</td>
+                    <td>@employee.EmailAddress</td>
+                    <td>
+                        <a class="nav-link inline-link" href="EmployeeDetails/@employee.Id">
+                            <span class="oi oi-pencil" aria-hidden="true">View</span>
+                        </a>
+                        <a class="nav-link inline-link" href="EditEmployee/@employee.Id">
+                            <span class="oi oi-pencil" aria-hidden="true">Edit</span>
+                        </a>
+                        <a class="nav-link inline-link" href="Delete/@employee.Id">
+                            <span class="oi oi-trash" aria-hidden="true">Delete</span>
+                        </a>
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="vertical-align-center" style="margin-bottom: 100px">
+        <button class="btn btn-primary" disabled="@IsFirstPage()" @onclick="PreviousPage">Previous</button>
+        <span>Page @currentPage of @totalPages</span>
+        <button class="btn btn-primary" disabled="@IsLastPage()" @onclick="NextPage">Next</button>
+    </div>
+
 }
 else
 {
-    <table class="table">
-        <thead>
-        <tr>
-            <th>
-                Emp No
-            </th>
-
-            <th>
-                FirstName
-            </th>
-
-            <th>
-                MiddleName
-            </th>
-
-            <th>
-                LastName
-            </th>
-            <th>
-                Disignation
-            </th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach (var emp in EmpObj)
-        {
-            <tr>
-                <td>@emp.Id</td>
-                <td>@emp.FirstName</td>
-                <td>@emp.MiddleName</td>
-                <td>@emp.LastName</td>
-                <td>@emp.Designation</td>
-                <td>
-                    <a class="nav-link" href="EditEmployee/@emp.Id">
-                        <span class="oi oi-pencil" aria-hidden="true">Edit</span>
-                    </a>
-                    <a class="nav-link" href="Delete/@emp.Id">
-                        <span class="oi oi-trash" aria-hidden="true">Delete</span>
-                    </a>
-                </td>
-            </tr>
-        }
-        </tbody>
-    </table>
+    <p>No employees found.</p>
 }
 
+@code {
+    List<Employee> employees;
+    bool toggleAdvSearch = false;
+    int currentPage = 1;
+    int pageSize = 5; // Adjust page size as needed
+    int totalPages;
+    string searchEmail = "";
+    string searchId = "";
+    string Designation = "";
+    string Department = "";
+    string PhoneNumber = "";
+    string Address = "";
 
-@code{
-    List<Employee> EmpObj;
+    void ToggleAdvancedSearch()
+    {
+        toggleAdvSearch = !toggleAdvSearch;
+    }
+
 
     protected override async Task OnInitializedAsync()
     {
-        EmpObj = await Task.Run(() => employeeService.GetAllEmployees());
+        await LoadEmployees();
+    }
+
+    private async Task LoadEmployees()
+    {
+        var totalCount = await employeeService.GetTotalEmployeesCount(searchEmail);
+        totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+
+        employees = await employeeService.GetPagedEmployees(searchEmail, pageSize, currentPage);
+    }
+
+    private async Task NextPage()
+    {
+        if (!IsLastPage())
+        {
+            currentPage++;
+            await LoadEmployees();
+        }
+    }
+
+    private async Task PreviousPage()
+    {
+        if (!IsFirstPage())
+        {
+            currentPage--;
+            await LoadEmployees();
+        }
+    }
+
+    private bool IsFirstPage()
+    {
+        return currentPage == 1;
+    }
+
+    private bool IsLastPage()
+    {
+        return currentPage == totalPages;
     }
 }
