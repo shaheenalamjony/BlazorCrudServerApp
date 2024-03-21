@@ -1,0 +1,54 @@
+﻿@page "/departmentdesignationlist"
+@using EmployeeManagement.Data
+@inject EmployeeService employeeService
+@inject DataExtraService dataExtraService
+<h3>Department Wise Designation List</h3>
+
+@if (departments == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Department</th>
+            <th>Designations</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var department in departments)
+        {
+            <tr>
+                <td>@department.Name</td>
+                <td>
+                    @if (department.Designations.Any())
+                    {
+                        <ul>
+                            @foreach (var designation in department.Designations)
+                            {
+                                <li>@designation.Title</li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <p>No designations found for this department.</p>
+                    }
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Department> departments;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Fetch departments and their associated designations from the database
+        departments = await dataExtraService.DepartmentWiseDesignationList();
+    }
+}

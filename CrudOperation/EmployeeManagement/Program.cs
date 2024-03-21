@@ -12,6 +12,7 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
 // Services
 builder.Services.AddScoped<EmployeeService>();
+builder.Services.AddScoped<DataExtraService>();
 
 // DbContext
 builder.Services

@@ -4,6 +4,8 @@
 @inject IJSRuntime JSRuntime
 @inject NavigationManager NavigationManager
 
+
+
 <h2>View Employee Details</h2>
 <div class="container" id="EmployeeDetails"> <!-- Add id attribute here -->
     <div class="card mb-3 employee-details">
@@ -13,20 +15,61 @@
                 <tbody>
                 <tr>
                     <th scope="row">Employee ID:</th>
-                    <td><i class="fas fa-id-card"></i> @obj.Id</td>
+                        <td><i class="fas fa-id-card"></i> @obj.Id</td>
                 </tr>
                 <tr>
-                    <th scope="row">Name:</th>
-                    <td>@obj.FullName</td>
+                    <th scope="row">User Name:</th>
+                        <td>@obj.UserName</td>
                 </tr>
                 <tr>
-                    <th scope="row">Designation:</th>
-                    <td>@obj.Designation</td>
+                    <th scope="row">Password:</th>
+                        <td>@obj.Password</td>
+                </tr>
+                <tr>
+                    <th scope="row">First Name:</th>
+                        <td>@obj.FirstName</td>
+                </tr>
+                <tr>
+                    <th scope="row">Middle Name:</th>
+                        <td>@obj.MiddleName</td>
+                </tr>
+                <tr>
+                    <th scope="row">Last Name:</th>
+                        <td>@obj.LastName</td>
+                </tr>
+                <tr>
+                    <th scope="row">Postal Code:</th>
+                        <td>@obj.PostalCode</td>
+                </tr>
+                <tr>
+                    <th scope="row">Address:</th>
+                        <td>@obj.Address</td>
+                </tr>
+                <tr>
+                    <th scope="row">Email Address:</th>
+                        <td>@obj.EmailAddress</td>
+                </tr>
+                <tr>
+                    <th scope="row">Phone Number:</th>
+                        <td>@obj.PhoneNumber</td>
                 </tr>
                 <tr>
                     <th scope="row">City:</th>
-                    <td>@obj.City</td>
+                        <td>@obj.City</td>
                 </tr>
+                <tr>
+                    <th scope="row">Designation:</th>
+                        <td>@obj.Designation</td>
+                </tr>
+                <tr>
+                    <th scope="row">Department:</th>
+                        <td>@obj.Department</td>
+                </tr>
+                <tr>
+                    <th scope="row">Region:</th>
+                        <td>@obj.Region</td>
+                </tr>
+
                 </tbody>
             </table>
         </div>
@@ -34,7 +77,7 @@
 
     <div class="d-flex justify-content-end">
         <button type="button" class="btn btn-danger me-2" @onclick="Print">Print</button>
-        <button type="button" class="btn btn-primary" @onclick="Cancel">Cancel</button>
+        <button type="button" class="btn btn-primary" @onclick="Cancel">Back to Employee List</button>
     </div>
 </div>
 

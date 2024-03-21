@@ -1,84 +1,219 @@
 ﻿@page "/AddEmployee"
 @using EmployeeManagement.Data
+@using EmployeeManagement.Enum
+@using System.ComponentModel.DataAnnotations
 @inject EmployeeService employeeService
+@inject DataExtraService dataExtraService
 @inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
 
 <h3>Add New Employee</h3>
 <hr />
 
-<form>
+<form class="container mt-5">
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-6">
             <div class="form-group">
-                <label for="FirstName" class="control-label"> First Name</label>
-                <input for="FirstName" class="form-control" @bind="@obj.FirstName" />
+                <label for="FirstName" class="control-label">First Name</label>
+                <input id="FirstName" class="form-control" @bind="@obj.FirstName" />
+                @if (validationErrors.ContainsKey(nameof(obj.FirstName)))
+                {
+                    <p class="text-danger">@validationErrors[nameof(obj.FirstName)]</p>
+                }
             </div>
             <div class="form-group">
-                <label for="MiddleName" class="control-label"> Middle Name</label>
-                <input for="MiddleName" class="form-control" @bind="@obj.MiddleName" />
+                <label for="MiddleName" class="control-label">Middle Name</label>
+                <input id="MiddleName" class="form-control" @bind="@obj.MiddleName" />
+                @if (validationErrors.ContainsKey(nameof(obj.MiddleName)))
+                {
+                    <p class="text-danger">@validationErrors[nameof(obj.MiddleName)]</p>
+                }
             </div>
             <div class="form-group">
-                <label for="LastName" class="control-label"> Last Name</label>
-                <input for="LastName" class="form-control" @bind="@obj.LastName" />
+                <label for="LastName" class="control-label">Last Name</label>
+                <input id="LastName" class="form-control" @bind="@obj.LastName" />
+                @if (validationErrors.ContainsKey(nameof(obj.LastName)))
+                {
+                    <p class="text-danger">@validationErrors[nameof(obj.LastName)]</p>
+                }
+            </div>
+            <div class="form-group">
+                <label for="PostalCode" class="control-label">Postal Code</label>
+                <input id="PostalCode" class="form-control" @bind="@obj.PostalCode" />
+                @if (validationErrors.ContainsKey(nameof(obj.PostalCode)))
+                {
+                    <p class="text-danger">@validationErrors[nameof(obj.PostalCode)]</p>
+                }
+            </div>
+            <div class="form-group">
+                <label for="Address" class="control-label">Address</label>
+                <input id="Address" class="form-control" @bind="@obj.Address" />
+                @if (validationErrors.ContainsKey(nameof(obj.Address)))
+                {
+                    <p class="text-danger">@validationErrors[nameof(obj.Address)]</p>
+                }
+            </div>
+            <div class="form-group">
+                <label for="City" class="control-label">City</label>
+                <input id="City" class="form-control" @bind="@obj.City" />
+                @if (validationErrors.ContainsKey(nameof(obj.City)))
+                {
+                    <p class="text-danger">@validationErrors[nameof(obj.City)]</p>
+                }
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="Department" class="control-label">Department</label>
+                <select id="Department" class="form-control" @bind="@obj.Department">
+                    <option value="">--Select Department--</option>
+                    @foreach (var department in departmentList)
+                    {
+                        <option value="@department.Name">@department.Name</option>
+                    }
+                </select>
+                @if (validationErrors.ContainsKey(nameof(obj.Department)))
+                {
+                    <p class="text-danger">@validationErrors[nameof(obj.Department)]</p>
+                }
+            </div>
+            <div class="form-group">
+                <label for="Designation" class="control-label">Designation</label>
+                <select id="Designation" class="form-control" @bind="@obj.Designation">
+                    <option value="">--Select Designation--</option>
+                    @foreach (var designation in designationList)
+                    {
+                        <option value="@designation.Title">@designation.Title</option>
+                    }
+                </select>
+                @if (validationErrors.ContainsKey(nameof(obj.Designation)))
+                {
+                    <p class="text-danger">@validationErrors[nameof(obj.Designation)]</p>
+                }
+            </div>
+            <div class="form-group">
+                <label for="EmailAddress" class="control-label">Email Address</label>
+                <input id="EmailAddress" class="form-control" @bind="@obj.EmailAddress" />
+                @if (validationErrors.ContainsKey(nameof(obj.EmailAddress)))
+                {
+                    <p class="text-danger">@validationErrors[nameof(obj.EmailAddress)]</p>
+                }
+            </div>
+            <div class="form-group">
+                <label for="PhoneNumber" class="control-label">Phone Number</label>
+                <input id="PhoneNumber" class="form-control" @bind="@obj.PhoneNumber" />
+                @if (validationErrors.ContainsKey(nameof(obj.PhoneNumber)))
+                {
+                    <p class="text-danger">@validationErrors[nameof(obj.PhoneNumber)]</p>
+                }
             </div>
             @* <div class="form-group">
-                <label for="Gender" class="control-label"> Gender</label>
-                <select @bind="@obj.Gender" class="form-control">
-                    <option value="">-Select Gender</option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                </select>
+            <label for="Region" class="control-label">Region</label>
+            <input id="Region" class="form-control" @bind="@obj.Region" />
+            @if (validationErrors.ContainsKey(nameof(obj.Region)))
+            {
+            <p class="text-danger">@validationErrors[nameof(obj.Region)]</p>
+            }
             </div> *@
             <div class="form-group">
-                <label for="PostalCode" class="control-label"> PostalCode</label>
-                <input for="PostalCode" class="form-control" @bind="@obj.PostalCode" />
-            </div>
-            <div class="form-group">
-                <label for="Address" class="control-label"> Address</label>
-                <input for="Address" class="form-control" @bind="@obj.Address" />
-            </div>
-            <div class="form-group">
-                <label for="EmailAddress" class="control-label"> Email Address</label>
-                <input for="EmailAddress" class="form-control" @bind="@obj.EmailAddress" />
-            </div>
-            <div class="form-group">
-                <label for="PhoneNumber" class="control-label"> Phone Number</label>
-                <input for="PhoneNumber" class="form-control" @bind="@obj.PhoneNumber" />
-            </div>
-            <div class="form-group">
-                <label for="City" class="control-label"> City</label>
-                <input for="City" class="form-control" @bind="@obj.City" />
-            </div>
-            <div class="form-group">
-                <label for="Designation" class="control-label"> Designation</label>
-                <input for="Designation" class="form-control" @bind="@obj.Designation" />
-            </div>
-            <div class="form-group">
-                <label for="Department" class="control-label"> Department</label>
-                <input for="Department" class="form-control" @bind="@obj.Department" />
-            </div>
-            <div class="form-group">
-                <label for="Region" class="control-label"> Region</label>
-                <input for="Region" class="form-control" @bind="@obj.Region" />
+                <label for="Religion" class="control-label">Religion</label>
+                <select id="Religion" class="form-control" @bind="@obj.Region">
+                    <option value="">--Select Religion--</option>
+                    @foreach (var religion in GetReligionList())
+                    {
+                        <option value="@religion">@religion</option>
+                    }
+                </select>
+                @if (validationErrors.ContainsKey(nameof(obj.Region)))
+                {
+                    <p class="text-danger">@validationErrors[nameof(obj.Region)]</p>
+                }
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-4">
+    <div class="row mt-3">
+        <div class="col-md-12 text-center">
             <div class="form-group">
-                <input type="button" class="btn btn-primary" @onclick="@CreateEmployee" value="Save" />
-                <input type="button" class="btn btn-primary" @onclick="@Cancel" value="Cancel" />
+                <button type="button" class="btn btn-primary mr-2" @onclick="@CreateEmployee">Save</button>
+                <button type="button" class="btn btn-secondary" @onclick="@Cancel">Back to Employee List</button>
             </div>
         </div>
     </div>
 </form>
 
+
+
+
 @code {
     Employee obj = new Employee();
-    protected async void CreateEmployee()
+    List<Department> departmentList = new List<Department>();
+    List<Designation> designationList = new List<Designation>();
+    Dictionary<string, string> validationErrors = new Dictionary<string, string>();
+
+    protected override async Task OnInitializedAsync()
     {
-        await employeeService.AddNewEmployee(obj);
+        departmentList = await dataExtraService.GetAllDepartment();
+        designationList = await dataExtraService.GetAllDesignation();
+    }
+
+    protected async Task CreateEmployee()
+    {
+        // Clear existing validation errors
+        validationErrors.Clear();
+
+        var validationContext = new ValidationContext(obj);
+        var validationResults = new List<ValidationResult>();
+        // Generate a random number between 10000 and 99999 for the username
+        int randomUsername = new Random().Next(10000, 100000);
+        // Set the username as FirstName followed by the random number
+        obj.UserName = $"{obj.FirstName}@{randomUsername}";
+
+        // Generate a random number between 100000 and 999999 for the password
+        int randomPassword = new Random().Next(100000, 1000000);
+        // Set the password as the generated random number
+        obj.Password = randomPassword.ToString();
+
+        // Validate the object using Data Annotations
+        if (!Validator.TryValidateObject(obj, validationContext, validationResults, true))
+        {
+            // If validation fails, populate validationErrors dictionary
+            foreach (var result in validationResults)
+            {
+                foreach (var memberName in result.MemberNames)
+                {
+                    if (!validationErrors.ContainsKey(memberName))
+                    {
+                        validationErrors.Add(memberName, result.ErrorMessage);
+                    }
+                }
+            }
+            return;
+        }
+
+       
+        // If validation succeeds, proceed with adding the employee
+        bool flag = await employeeService.AddNewEmployee(obj);
+        // if (flag)
+        // {
+        //     // Show modal with username and password
+        //     // ShowModal = true;
+        //     // Alternatively, you can use JavaScript to trigger the modal display
+        //     // You may need to adjust this based on your specific JavaScript setup
+        //     await Task.Delay(100); // Delay for 100 milliseconds
+        //     await JSRuntime.InvokeVoidAsync("$('#exampleModal').modal", "show");
+
+        // }
+        // else
+        // {
+        //     // If employee creation fails, navigate back to EmployeeList
+        //     NavigationManager.NavigateTo("EmployeeList");
+        // }
         NavigationManager.NavigateTo("EmployeeList");
+    }
+    public static List<string> GetReligionList()
+    {
+        var religions = Enum.GetNames(typeof(Enums.Religion)).ToList();
+        return religions;
     }
     void Cancel()
     {

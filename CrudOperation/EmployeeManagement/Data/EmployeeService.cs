@@ -32,15 +32,48 @@ namespace EmployeeManagement.Data
         }
 
         //Get Paged Employees
-        public async Task<List<Employee>> GetPagedEmployees(string searchEmail = "", int? pageSize = null, int? pageNo = null)
+        public async Task<List<Employee>> GetPagedEmployees(
+            string searchId = ""
+        , string searchEmail = ""
+        , string designation = ""
+        , string department  = ""
+        , string phoneNumber = ""
+        , string address = ""
+            , int? pageSize = null
+            , int? pageNo = null)
         {
             try
             {
                 IQueryable<Employee> query = _applicationDbContext.Employees.OrderBy(x => x.Id);
 
+                if (!string.IsNullOrEmpty(searchId))
+                {
+                    query = query.Where(q => q.UserName.ToLower().Contains(searchId.ToLower()));
+                }
+
                 if (!string.IsNullOrEmpty(searchEmail))
                 {
                     query = query.Where(q => q.EmailAddress.ToLower().Contains(searchEmail.ToLower()));
+                }
+
+                if (!string.IsNullOrEmpty(designation))
+                {
+                    query = query.Where(q => q.Designation.ToLower() == designation.ToLower());
+                }
+
+                if (!string.IsNullOrEmpty(department))
+                {
+                    query = query.Where(q => q.Department.ToLower() == department.ToLower());
+                }
+
+                if (!string.IsNullOrEmpty(phoneNumber))
+                {
+                    query = query.Where(q => q.PhoneNumber.Contains(phoneNumber));
+                }
+
+                if (!string.IsNullOrEmpty(address))
+                {
+                    query = query.Where(q => q.Address.ToLower().Contains(address.ToLower()));
                 }
 
                 if (pageNo.HasValue && pageSize.HasValue && pageNo.Value >= 0 && pageSize.Value > 0)

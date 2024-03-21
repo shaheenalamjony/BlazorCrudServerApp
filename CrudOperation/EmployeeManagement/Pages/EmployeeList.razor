@@ -1,6 +1,7 @@
 ﻿@page "/EmployeeList"
 @using EmployeeManagement.Data
 @inject EmployeeService employeeService
+@inject DataExtraService dataExtraService
 
 <style>
     .inline-link {
@@ -19,7 +20,7 @@
 </NavLink>
 <div class="row" style="padding: 10px;">
     <div class="col-md-4">
-        <input type="text" @bind="@searchId" class="form-control" placeholder="Search by Employee ID" />
+        <input type="text" @bind="@searchId" class="form-control" placeholder="Search by User Name" />
     </div>
     <div class="col-md-4">
         <input type="text" @bind="@searchEmail" class="form-control" placeholder="Search by Email Address" />
@@ -37,24 +38,38 @@
                 
 
                 <tr>
-                    <td class="">Designation</td>
-                    <td class="" style="padding-right:50px;">
-                        <input type="text" @bind="Designation" class="form-control" placeholder="Search By Designation" maxlength="150" required />
-                    </td>
+                    
                     <td class="">Department</td>
                     <td class="" style="padding-right:50px;">
-                        <input type="text" @bind="Department" class="form-control" placeholder="Search By Department" maxlength="150" required />
+                        <select id="Department" class="form-control" @bind="@department">
+                            <option value="">--Search By Department--</option>
+                            @foreach (var department in departmentList)
+                            {
+                                <option value="@department.Name">@department.Name</option>
+                            }
+                        </select>
+                    </td>
+                    <td class="">Designation</td>
+                    <td class="" style="padding-right:50px;">
+                        <select id="Designation" class="form-control" @bind="@designation">
+                                <option value="">--Search By Designation--</option>
+                            @foreach (var designation in designationList)
+                            {
+                                <option value="@designation.Title">@designation.Title</option>
+                            }
+                        </select>
                     </td>
                 </tr>
+        
                 <tr><td></td></tr>
                 <tr>
                     <td class="">Phone Number</td>
                     <td class="" style="padding-right:50px;">
-                        <input type="text" @bind="PhoneNumber" class="form-control" placeholder="Search By Phone Number" maxlength="150" required />
+                        <input type="text" @bind="phoneNumber" class="form-control" placeholder="Search By Phone Number" maxlength="150" required />
                     </td>
                     <td class="">Address</td>
                     <td class="" style="padding-right:50px;">
-                        <input type="text" @bind="Address" class="form-control" placeholder="Search By Address" maxlength="150" required />
+                        <input type="text" @bind="address" class="form-control" placeholder="Search By Address" maxlength="150" required />
                     </td>
                 </tr>
                 </tbody>
@@ -82,8 +97,11 @@ else if (employees.Any())
         <thead>
             <tr>
                 <th>Employee ID</th>
+                <th>User Name</th>
                 <th>Name</th>
                 <th>Email</th>
+                <th>Department</th>
+                <th>Designation</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -92,8 +110,11 @@ else if (employees.Any())
             {
                 <tr>
                     <td>@employee.Id</td>
+                    <td>@employee.UserName</td>
                     <td>@employee.FirstName</td>
                     <td>@employee.EmailAddress</td>
+                    <td>@employee.Department</td>
+                    <td>@employee.Designation</td>
                     <td>
                         <a class="btn btn-primary btn-sm" href="EmployeeDetails/@employee.Id">
                             <span class="oi oi-view" aria-hidden="true">View</span>
@@ -131,10 +152,12 @@ else
     int totalPages;
     string searchEmail = "";
     string searchId = "";
-    string Designation = "";
-    string Department = "";
-    string PhoneNumber = "";
-    string Address = "";
+    string designation = "";
+    string department = "";
+    string phoneNumber = "";
+    string address = "";
+    List<Department> departmentList = new List<Department>();
+    List<Designation> designationList = new List<Designation>();
 
     void ToggleAdvancedSearch()
     {
@@ -144,7 +167,9 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        await LoadEmployees();
+         await LoadEmployees();
+         departmentList = await dataExtraService.GetAllDepartment();
+         designationList = await dataExtraService.GetAllDesignation();
     }
 
     private async Task LoadEmployees()
@@ -152,7 +177,13 @@ else
         var totalCount = await employeeService.GetTotalEmployeesCount(searchEmail);
         totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
 
-        employees = await employeeService.GetPagedEmployees(searchEmail, pageSize, currentPage);
+        employees = await employeeService.GetPagedEmployees(searchId
+            ,searchEmail
+            , designation
+            , department
+            , phoneNumber
+            ,address
+            , pageSize, currentPage);
     }
 
     private async Task NextPage()
