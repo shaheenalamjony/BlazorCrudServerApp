@@ -14,7 +14,9 @@
     }
 </style>
 <h1>Employee List</h1>
-
+<NavLink class="nav-link" href="AddEmployee">
+    <span class="oi oi-plus" aria-hidden="true">Add New Employee</span>
+</NavLink>
 <div class="row" style="padding: 10px;">
     <div class="col-md-4">
         <input type="text" @bind="@searchId" class="form-control" placeholder="Search by Employee ID" />
@@ -29,7 +31,7 @@
     </div>
     @if (toggleAdvSearch)
     {
-        <div class="col-md-12 table-form">
+        <div class="col-md-12 table-form" style="margin-top:20px;">
             <table class="form" width="100%" border="0">
                 <tbody>
                 
@@ -93,13 +95,13 @@ else if (employees.Any())
                     <td>@employee.FirstName</td>
                     <td>@employee.EmailAddress</td>
                     <td>
-                        <a class="nav-link inline-link" href="EmployeeDetails/@employee.Id">
-                            <span class="oi oi-pencil" aria-hidden="true">View</span>
+                        <a class="btn btn-primary btn-sm" href="EmployeeDetails/@employee.Id">
+                            <span class="oi oi-view" aria-hidden="true">View</span>
                         </a>
-                        <a class="nav-link inline-link" href="EditEmployee/@employee.Id">
+                        <a class="btn btn-info btn-sm" href="EditEmployee/@employee.Id">
                             <span class="oi oi-pencil" aria-hidden="true">Edit</span>
                         </a>
-                        <a class="nav-link inline-link" href="Delete/@employee.Id">
+                        <a class="btn btn-danger btn-sm" href="Delete/@employee.Id">
                             <span class="oi oi-trash" aria-hidden="true">Delete</span>
                         </a>
                     </td>
@@ -111,7 +113,7 @@ else if (employees.Any())
 
     <div class="vertical-align-center" style="margin-bottom: 100px">
         <button class="btn btn-primary" disabled="@IsFirstPage()" @onclick="PreviousPage">Previous</button>
-        <span>Page @currentPage of @totalPages</span>
+        <span style="margin: 10px;">Page @currentPage of @totalPages</span>
         <button class="btn btn-primary" disabled="@IsLastPage()" @onclick="NextPage">Next</button>
     </div>
 
