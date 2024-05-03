@@ -44,7 +44,7 @@ namespace EmployeeManagement.Data
         {
             try
             {
-                IQueryable<Employee> query = _applicationDbContext.Employees.OrderBy(x => x.Id);
+                IQueryable<Employee> query = _applicationDbContext.Employees.OrderByDescending(x => x.Id);
 
                 if (!string.IsNullOrEmpty(searchId))
                 {

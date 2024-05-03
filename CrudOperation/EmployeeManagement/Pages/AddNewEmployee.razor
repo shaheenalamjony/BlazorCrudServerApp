@@ -14,7 +14,8 @@
     <div class="row">
         <div class="col-md-6">
             <div class="form-group">
-                <label for="FirstName" class="control-label">First Name</label>
+                <label for="FirstName" class="control-label">First Name <span style="color: red;">*</span></label>
+
                 <input id="FirstName" class="form-control" @bind="@obj.FirstName" />
                 @if (validationErrors.ContainsKey(nameof(obj.FirstName)))
                 {
@@ -22,7 +23,7 @@
                 }
             </div>
             <div class="form-group">
-                <label for="MiddleName" class="control-label">Middle Name</label>
+                <label for="MiddleName" class="control-label">Middle Name </label>
                 <input id="MiddleName" class="form-control" @bind="@obj.MiddleName" />
                 @if (validationErrors.ContainsKey(nameof(obj.MiddleName)))
                 {
@@ -30,7 +31,7 @@
                 }
             </div>
             <div class="form-group">
-                <label for="LastName" class="control-label">Last Name</label>
+                <label for="LastName" class="control-label">Last Name <span style="color: red;">*</span></label>
                 <input id="LastName" class="form-control" @bind="@obj.LastName" />
                 @if (validationErrors.ContainsKey(nameof(obj.LastName)))
                 {
@@ -38,7 +39,7 @@
                 }
             </div>
             <div class="form-group">
-                <label for="PostalCode" class="control-label">Postal Code</label>
+                <label for="PostalCode" class="control-label">Postal Code <span style="color: red;">*</span></label>
                 <input id="PostalCode" class="form-control" @bind="@obj.PostalCode" />
                 @if (validationErrors.ContainsKey(nameof(obj.PostalCode)))
                 {
@@ -46,7 +47,7 @@
                 }
             </div>
             <div class="form-group">
-                <label for="Address" class="control-label">Address</label>
+                <label for="Address" class="control-label">Address <span style="color: red;">*</span></label>
                 <input id="Address" class="form-control" @bind="@obj.Address" />
                 @if (validationErrors.ContainsKey(nameof(obj.Address)))
                 {
@@ -54,7 +55,7 @@
                 }
             </div>
             <div class="form-group">
-                <label for="City" class="control-label">City</label>
+                <label for="City" class="control-label">City <span style="color: red;">*</span></label>
                 <input id="City" class="form-control" @bind="@obj.City" />
                 @if (validationErrors.ContainsKey(nameof(obj.City)))
                 {
@@ -64,7 +65,7 @@
         </div>
         <div class="col-md-6">
             <div class="form-group">
-                <label for="Department" class="control-label">Department</label>
+                <label for="Department" class="control-label">Department <span style="color: red;">*</span></label>
                 <select id="Department" class="form-control" @bind="@obj.Department">
                     <option value="">--Select Department--</option>
                     @foreach (var department in departmentList)
@@ -78,7 +79,7 @@
                 }
             </div>
             <div class="form-group">
-                <label for="Designation" class="control-label">Designation</label>
+                <label for="Designation" class="control-label">Designation <span style="color: red;">*</span></label>
                 <select id="Designation" class="form-control" @bind="@obj.Designation">
                     <option value="">--Select Designation--</option>
                     @foreach (var designation in designationList)
@@ -92,7 +93,7 @@
                 }
             </div>
             <div class="form-group">
-                <label for="EmailAddress" class="control-label">Email Address</label>
+                <label for="EmailAddress" class="control-label">Email Address <span style="color: red;">*</span></label>
                 <input id="EmailAddress" class="form-control" @bind="@obj.EmailAddress" />
                 @if (validationErrors.ContainsKey(nameof(obj.EmailAddress)))
                 {
@@ -100,7 +101,7 @@
                 }
             </div>
             <div class="form-group">
-                <label for="PhoneNumber" class="control-label">Phone Number</label>
+                <label for="PhoneNumber" class="control-label">Phone Number <span style="color: red;">*</span></label>
                 <input id="PhoneNumber" class="form-control" @bind="@obj.PhoneNumber" />
                 @if (validationErrors.ContainsKey(nameof(obj.PhoneNumber)))
                 {
